@@ -2,21 +2,22 @@
   <div class="col-md-12">
     <h4 class="m-b-lg">
       Ürün Listesi
-      <a href="<?php echo base_url("product/new_form"); ?>" class="btn btn-outline btn-primary btn-xs pull-right"> <i
-          class="fa fa-plus"></i> Yeni Ekle</a>
+      <a href="<?php echo base_url("product/new_form"); ?>" class="btn btn-outline btn-primary btn-xs pull-right">
+        <i class="fa fa-plus"></i> Yeni Ekle
+      </a>
     </h4>
   </div><!-- END column -->
   <div class="col-md-12">
     <div class="widget p-lg">
 
-      <?php if (empty($items)) { ?>
+      <?php if (empty($items)): ?>
 
         <div class="alert alert-info text-center">
           <p>Burada herhangi bir veri bulunmamaktadır. Eklemek için lütfen <a
               href="<?php echo base_url("product/new_form"); ?>">tıklayınız</a></p>
         </div>
 
-      <?php } else { ?>
+      <?php else: ?>
 
         <table class="table table-hover table-striped">
           <thead>
@@ -29,7 +30,7 @@
           </thead>
           <tbody>
 
-          <?php foreach ($items as $item) { ?>
+          <?php foreach ($items as $item): ?>
 
             <tr>
               <td>#<?php echo $item->id; ?></td>
@@ -54,13 +55,13 @@
               </td>
             </tr>
 
-          <?php } ?>
+          <?php endforeach; ?>
 
           </tbody>
 
         </table>
 
-      <?php } ?>
+      <?php endif; ?>
 
     </div><!-- .widget -->
   </div><!-- END column -->
