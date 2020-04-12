@@ -11,9 +11,15 @@ class Product_model extends CI_Model
   }
 
   /** Tüm Kayıtları bana getirecek olan metot.. */
-  public function get_all()
+  public function get_all($where = array())
   {
-    return $this->db->get($this->tableName)->result();
+    return $this->db->where($where)->get($this->tableName)->result();
+  }
+
+  /** Bir ürün getiren metot */
+  public function get($where = array())
+  {
+    return $this->db->where($where)->get($this->tableName)->row();
   }
 
   /** Ürün kaydı */
@@ -21,4 +27,5 @@ class Product_model extends CI_Model
   {
     return $this->db->insert($this->tableName, $data);
   }
+
 }

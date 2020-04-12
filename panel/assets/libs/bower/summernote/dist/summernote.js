@@ -4306,7 +4306,7 @@
     this.getLinkInfo = function () {
       var rng = this.createRange().expand(dom.isAnchor);
 
-      // Get the first anchor on range(for edit).
+      // Get the first anchor on range(for update).
       var $anchor = $(list.head(rng.nodes(dom.isAnchor)));
 
       return {
