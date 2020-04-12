@@ -94,5 +94,54 @@ class Product extends CI_Controller
     $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
   }
 
+  public function update($id)
+  {
+    $this->load->library("form_validation");
+
+    $this->form_validation->set_rules("title", "Başlık", "required|trim");
+    $this->form_validation->set_message(
+      array(
+        "required" => "<b>{field}</b> alanı doldurulmalıdır"
+      )
+    );
+
+    $validate = $this->form_validation->run(); // run() -> true veya false döner.
+
+    if ($validate) {
+      // Veri tabanına kayıt
+      $update = $this->product_model->update(
+        array(
+          "id" => $id
+        ),
+        array(
+          "title" => $this->input->post("title"),
+          "description" => $this->input->post("description"),
+          "url" => covertToSEO($this->input->post("title")),
+        )
+      );
+
+      // TODO -> ALert Sistemi Eklenecek
+      if ($update) {
+        redirect(base_url("product"));
+      } else {
+        redirect(base_url("product"));
+      }
+
+    } else {
+      // Hata dönüşleri
+      $viewData = new stdClass();
+      $viewData->viewFolder = $this->viewFolder;
+      $viewData->subViewFolder = "update";
+      $viewData->form_error = true;
+      $item = $this->product_model->get(
+        array(
+          "id" => $id
+        )
+      );
+      $viewData->item = $item;
+      $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
+    }
+
+  }
 
 }
