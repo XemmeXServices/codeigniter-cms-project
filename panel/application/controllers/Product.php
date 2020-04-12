@@ -57,6 +57,22 @@ class Product extends CI_Controller
 
     if ($validate) {
       // Veri tabanına kayıt
+      $insert = $this->product_model->add(
+        array(
+          "title"       => $this->input->post("title"),
+          "description" => $this->input->post("description"),
+          "url"         => "test",
+          "rank"        => 0,
+          "isActive"    => true,
+          "createdAt"   => date("Y-m-d H:i:s")
+        )
+      );
+
+      if ($insert) {
+        echo 'Kayıt başarılı';
+      } else {
+        echo 'Kayıt başarısız';
+      }
 
     } else {
       // Hata dönüşleri
