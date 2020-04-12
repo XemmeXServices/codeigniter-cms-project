@@ -34,15 +34,11 @@ class Product extends CI_Controller
 
   public function new_form()
   {
-
     $viewData = new stdClass();
-
     /** View'e gönderilecek Değişkenlerin Set Edilmesi.. */
     $viewData->viewFolder = $this->viewFolder;
     $viewData->subViewFolder = "add";
-
     $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
-
   }
 
 
@@ -53,16 +49,22 @@ class Product extends CI_Controller
     $this->form_validation->set_rules("title", "Başlık", "required|trim");
     $this->form_validation->set_message(
       array(
-        "required" => "<b>{field}</b> alanını doldurulmalıdır"
+        "required" => "<b>{field}</b> alanı doldurulmalıdır"
       )
     );
 
     $validate = $this->form_validation->run(); // run() -> true veya false döner.
 
     if ($validate) {
-      echo 'dogru';
+      // Veri tabanına kayıt
+
     } else {
-      echo validation_errors();
+      // Hata dönüşleri
+      $viewData = new stdClass();
+      $viewData->viewFolder = $this->viewFolder;
+      $viewData->subViewFolder = "add";
+      $viewData->form_error = true;
+      $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
     }
 
   }
