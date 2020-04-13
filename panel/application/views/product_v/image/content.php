@@ -17,51 +17,61 @@
 <div class="row">
   <div class="col-md-12">
     <h4 class="m-b-lg">
-      <strong><?= $item->title; ?></strong> Kaydına Ait Resimler
+      <strong><?= $item->title; ?></strong> <i class="fa fa-chevron-right"></i> Kaydına Ait Resimler
     </h4>
   </div><!-- END column -->
   <div class="col-md-12">
     <div class="widget">
       <div class="widget-body">
-        <table class="table table-bordered table-striped table-hover pictures_list">
-          <thead>
-          <th>#id</th>
-          <th>Görsel</th>
-          <th>Resim Adı</th>
-          <th>Durumu</th>
-          <th>İşlem</th>
-          </thead>
-          <tbody>
+        <?php if (empty($item_images)): ?>
 
-          <tr>
-            <td class="w100 text-center">#1</td>
-            <td class="w100">
-              <img width="30" src="https://kablosuzkedi.com/wp-content/uploads/2016/11/KablosuzKedi_2-917x1024.png"
-                   alt="" class="img-responsive">
-            </td>
-            <td>deneme-urun.jpg</td>
-            <td class="w100 text-center">
-              <input
-                data-url="<?= base_url("product/isActiveSetter"); ?>"
-                class="isActive"
-                type="checkbox"
-                data-switchery
-                data-color="#10c469"
-                <?php echo (true) ? "checked" : ""; ?>
-              />
-            </td>
-            <td class="w100 text-center">
-              <button
-                data-url="<?= base_url("product/delete") ?>"
-                class="btn btn-sm btn-danger btn-outline remove-btn btn-block"
-              >
-                <i class="fa fa-trash"></i> Sil
-              </button>
-            </td>
-          </tr>
+          <div class="alert alert-info text-center">
+            <p>Burada herhangi bir resim bulunmamaktadır.</p>
+          </div>
 
-          </tbody>
-        </table>
+        <?php else: ?>
+
+          <table class="table table-bordered table-striped table-hover pictures_list">
+            <thead>
+            <th>#id</th>
+            <th>Görsel</th>
+            <th>Resim Adı</th>
+            <th>Durumu</th>
+            <th>İşlem</th>
+            </thead>
+            <tbody>
+            <?php foreach ($item_images as $image): ?>
+              <tr>
+                <td class="w100 text-center"># <?= $image->id ?></td>
+                <td class="w100">
+                  <img width="30" src="<?= base_url("uploads/{$viewFolder}/$image->img_url") ?>"
+                       alt="" class="img-responsive">
+                </td>
+                <td><?= $image->img_url ?></td>
+                <td class="w100 text-center">
+                  <input
+                    data-url="<?= base_url("product/isActiveSetter"); ?>"
+                    class="isActive"
+                    type="checkbox"
+                    data-switchery
+                    data-color="#10c469"
+                    <?php echo ($image->id) ? "checked" : ""; ?>
+                  />
+                </td>
+                <td class="w100 text-center">
+                  <button
+                    data-url="<?= base_url("product/delete") ?>"
+                    class="btn btn-sm btn-danger btn-outline remove-btn btn-block"
+                  >
+                    <i class="fa fa-trash"></i> Sil
+                  </button>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+            </tbody>
+          </table>
+
+        <?php endif; ?>
       </div><!-- .widget-body -->
     </div><!-- .widget -->
   </div><!-- END column -->
