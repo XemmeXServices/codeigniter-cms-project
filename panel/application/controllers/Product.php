@@ -53,7 +53,7 @@ class Product extends CI_Controller
         array(
           "title" => $this->input->post("title"),
           "description" => $this->input->post("description"),
-          "url" => covertToSEO($this->input->post("title")),
+          "url" => convertToSEO($this->input->post("title")),
           "rank" => 0,
           "isActive" => true,
           "createdAt" => date("Y-m-d H:i:s")
@@ -205,15 +205,18 @@ class Product extends CI_Controller
         "product_id" => $id
       )
     );
-    
+
     $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
   }
 
   public function image_upload($id)
   {
+    $file_name = convertToSEO(pathinfo($_FILES["file"]["name"], PATHINFO_FILENAME)) . '.' . pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
+
     $config = array(
       "allowed_types" => "jpg|jpeg|png",
-      "upload_path" => "uploads/$this->viewFolder/"
+      "upload_path" => "uploads/$this->viewFolder/",
+      "file_name" => $file_name
     );
 
     $this->load->library("upload", $config);
