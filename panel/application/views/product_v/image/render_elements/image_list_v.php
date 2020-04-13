@@ -19,7 +19,7 @@
     <tbody class="sortable" data-url="<?= base_url("product/imageRankSetter") ?>">
     <?php foreach ($item_images as $image): ?>
       <tr id="ord-<?= $image->id ?>">
-        <td class="w40"><i class="fa fa-reorder"></i></td>
+        <td class="order w40"><i class="fa fa-reorder"></i></td>
         <td class="w100 text-center"># <?= $image->id ?></td>
         <td class="w100">
           <img width="30" src="<?= base_url("uploads/{$viewFolder}/$image->img_url") ?>"
@@ -48,7 +48,7 @@
         </td>
         <td class="w100 text-center">
           <button
-            data-url="<?= base_url("product/delete") ?>"
+            data-url="<?= base_url("product/imageDelete/$image->id/$image->product_id") ?>"
             class="btn btn-sm btn-danger btn-outline remove-btn btn-block"
           >
             <i class="fa fa-trash"></i> Sil

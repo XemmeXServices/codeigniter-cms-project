@@ -1,8 +1,7 @@
 $(function () {
-
   $(".sortable").sortable();
 
-  $(".remove-btn").on('click', function () {
+  $(".content-container, .image_list_container").on('click', '.remove-btn', function () {
     var $data_url = $(this).data("url");
 
     swal({
@@ -86,6 +85,12 @@ $(function () {
         $(".sortable").sortable();
       });
     }
+  });
+
+  iziToast.success({
+    title: 'Hey',
+    message: 'What would you like to add?',
+    position: "topCenter"
   });
 
 });

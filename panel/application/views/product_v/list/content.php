@@ -19,7 +19,7 @@
 
       <?php else: ?>
 
-        <table class="table table-hover table-striped content-container">
+        <table class="table table-hover table-striped table-bordered content-container">
           <thead>
           <th><i class="fa fa-reorder"></i></th>
           <th>#id</th>
@@ -34,8 +34,8 @@
           <?php foreach ($items as $item): ?>
 
             <tr id="ord-<?= $item->id ?>">
-              <td><i class="fa fa-reorder"></i></td>
-              <td>#<?php echo $item->id; ?></td>
+              <td class="order"><i class="fa fa-reorder"></i></td>
+              <td class="order">#<?php echo $item->id; ?></td>
               <td><?php echo $item->title; ?></td>
               <td><?php echo $item->url; ?></td>
               <td><?php echo $item->description; ?></td>
@@ -49,7 +49,7 @@
                   <?php echo ($item->isActive) ? "checked" : ""; ?>
                 />
               </td>
-              <td>
+              <td class="order">
                 <button
                   data-url="<?= base_url("product/delete/$item->id") ?>"
                   class="btn btn-sm btn-danger btn-outline remove-btn"
