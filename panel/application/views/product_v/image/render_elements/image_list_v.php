@@ -8,6 +8,7 @@
 
   <table class="table table-bordered table-striped table-hover pictures_list">
     <thead>
+    <th><i class="fa fa-reorder"></i></th>
     <th>#id</th>
     <th>Görsel</th>
     <th>Resim Adı</th>
@@ -15,9 +16,10 @@
     <th>Kapak</th>
     <th>İşlem</th>
     </thead>
-    <tbody>
+    <tbody class="sortable" data-url="<?= base_url("product/imageRankSetter") ?>">
     <?php foreach ($item_images as $image): ?>
-      <tr>
+      <tr id="ord-<?= $image->id ?>">
+        <td class="w40"><i class="fa fa-reorder"></i></td>
         <td class="w100 text-center"># <?= $image->id ?></td>
         <td class="w100">
           <img width="30" src="<?= base_url("uploads/{$viewFolder}/$image->img_url") ?>"
@@ -26,7 +28,7 @@
         <td><?= $image->img_url ?></td>
         <td class="w100 text-center">
           <input
-            data-url="<?= base_url("product/isActiveSetter"); ?>"
+            data-url="<?= base_url("product/imageActiveSetter/$image->id"); ?>"
             class="isActive"
             type="checkbox"
             data-switchery

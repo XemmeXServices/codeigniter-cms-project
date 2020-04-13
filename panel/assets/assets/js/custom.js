@@ -22,7 +22,7 @@ $(function () {
 
   });
 
-  $(".isActive").on('change', function () {
+  $(".content-container, .image_list_container").on('change', '.isActive', function () {
     var $data = $(this).prop("checked");
     var $data_url = $(this).data("url");
 
@@ -32,7 +32,7 @@ $(function () {
     }
   });
 
-  $(".sortable").on("sortupdate", function () {
+  $(".content-container, .image_list_container").on("sortupdate", ".sortable", function () {
     var $data = $(this).sortable("serialize");
     var $data_url = $(this).data("url");
 
@@ -59,6 +59,7 @@ $(function () {
           jackColor: jackColor
         });
       });
+      $(".sortable").sortable();
     });
   });
 
@@ -82,6 +83,7 @@ $(function () {
             jackColor: jackColor
           });
         });
+        $(".sortable").sortable();
       });
     }
   });
