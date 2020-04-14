@@ -27,3 +27,7 @@ th {
 .sortable {
   cursor: move;
 }
+
+.video_url_container {
+  display: none;
+}
