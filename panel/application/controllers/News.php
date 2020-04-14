@@ -38,7 +38,25 @@ class News extends CI_Controller
   {
     $this->load->library("form_validation");
 
+    $news_type = $this->input->post("news_type");
+
+    if ($news_type == "image") {
+      if ($_FILES["img_url"]["name"] == "") {
+        $alert = array(
+          "title" => "İşlem başarısızdır",
+          "text" => "Lütfen bir görsel seçiniz",
+          "type" => "error"
+        );
+        $this->session->set_flashdata("alert", $alert);
+        redirect(base_url("news/new_form"));
+        die();
+      }
+    } else if ($news_type == "video") {
+      $this->form_validation->set_rules("video_url", "Video URL", "required|trim");
+    }
+
     $this->form_validation->set_rules("title", "Başlık", "required|trim");
+
     $this->form_validation->set_message(
       array(
         "required" => "<b>{field}</b> alanı doldurulmalıdır"
@@ -48,17 +66,58 @@ class News extends CI_Controller
     $validate = $this->form_validation->run(); // run() -> true veya false döner.
 
     if ($validate) {
-      // Veri tabanına kayıt
-      $insert = $this->news_model->add(
-        array(
+
+      if ($news_type == "image") {
+        $file_name = convertToSEO(pathinfo($_FILES["img_url"]["name"], PATHINFO_FILENAME)) . '.' . pathinfo($_FILES["img_url"]["name"], PATHINFO_EXTENSION);
+
+        $config = array(
+          "allowed_types" => "jpg|jpeg|png",
+          "upload_path" => "uploads/$this->viewFolder/",
+          "file_name" => $file_name
+        );
+
+        $this->load->library("upload", $config);
+        $upload = $this->upload->do_upload("img_url");
+
+        if ($upload) {
+          $uploaded_file = $this->upload->data("file_name");
+
+          $data = array(
+            "title" => $this->input->post("title"),
+            "description" => $this->input->post("description"),
+            "url" => convertToSEO($this->input->post("title")),
+            "news_type" => $news_type,
+            "img_url" => $uploaded_file,
+            "video_url" => "#",
+            "rank" => 0,
+            "isActive" => true,
+            "createdAt" => date("Y-m-d H:i:s")
+          );
+        } else {
+          $alert = array(
+            "title" => "İşlem başarısızdır",
+            "text" => "Görsel yüklenirken bir problem oluştu",
+            "type" => "error"
+          );
+          $this->session->set_flashdata("alert", $alert);
+          redirect(base_url("news/new_form"));
+          die();
+        }
+      } else if ($news_type == "video") {
+        $data = array(
           "title" => $this->input->post("title"),
           "description" => $this->input->post("description"),
           "url" => convertToSEO($this->input->post("title")),
+          "news_type" => $news_type,
+          "img_url" => "#",
+          "video_url" => $this->input->post("video_url"),
           "rank" => 0,
           "isActive" => true,
           "createdAt" => date("Y-m-d H:i:s")
-        )
-      );
+        );
+      }
+
+      $insert = $this->news_model->add($data);
 
       if ($insert) {
         $alert = array(
@@ -76,13 +135,14 @@ class News extends CI_Controller
 
       /** İşlemin sonucunu sessiona yazıyoruz */
       $this->session->set_flashdata("alert", $alert);
-      redirect(base_url("product"));
+      redirect(base_url("news"));
     } else {
       // Hata dönüşleri
       $viewData = new stdClass();
       $viewData->viewFolder = $this->viewFolder;
       $viewData->subViewFolder = "add";
       $viewData->form_error = true;
+      $viewData->news_type = $news_type;
       $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
     }
 
