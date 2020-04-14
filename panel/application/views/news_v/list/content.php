@@ -34,10 +34,10 @@
           <?php foreach ($items as $item): ?>
 
             <tr id="ord-<?= $item->id ?>">
-              <td class="order"><i class="fa fa-reorder"></i></td>
-              <td class="order">#<?php echo $item->id; ?></td>
+              <td class="order w40"><i class="fa fa-reorder"></i></td>
+              <td class="order w40">#<?php echo $item->id; ?></td>
               <td><?php echo $item->title; ?></td>
-              <td><?php echo $item->news_type ?></td>
+              <td class="order w100"><?php echo $item->news_type ?></td>
               <td class="order">
                 <?php if ($item->news_type == "image"): ?>
                   <img
@@ -57,7 +57,7 @@
                     allowfullscreen></iframe>
                 <?php endif; ?>
               </td>
-              <td>
+              <td class="order w100">
                 <input
                   data-url="<?= base_url("news/isActiveSetter/$item->id"); ?>"
                   class="isActive"
@@ -67,7 +67,7 @@
                   <?php echo ($item->isActive) ? "checked" : ""; ?>
                 />
               </td>
-              <td class="order">
+              <td class="order w200">
                 <button
                   data-url="<?= base_url("news/delete/$item->id") ?>"
                   class="btn btn-sm btn-danger btn-outline remove-btn"
