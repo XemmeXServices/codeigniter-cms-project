@@ -163,7 +163,7 @@ class News extends CI_Controller
     $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
   }
 
-  public function update($id)
+  public function update_($id)
   {
     $this->load->library("form_validation");
 
@@ -223,6 +223,120 @@ class News extends CI_Controller
 
   }
 
+  public function update($id)
+  {
+    $this->load->library("form_validation");
+
+    $news_type = $this->input->post("news_type");
+
+    if ($news_type == "video") {
+      $this->form_validation->set_rules("video_url", "Video URL", "required|trim");
+    }
+
+    $this->form_validation->set_rules("title", "Başlık", "required|trim");
+
+    $this->form_validation->set_message(
+      array(
+        "required" => "<b>{field}</b> alanı doldurulmalıdır"
+      )
+    );
+
+    $validate = $this->form_validation->run(); // run() -> true veya false döner.
+
+    if ($validate) {
+
+      if ($news_type == "image") {
+        if ($_FILES["img_url"]["name"] !== "") {
+          $file_name = convertToSEO(pathinfo($_FILES["img_url"]["name"], PATHINFO_FILENAME)) . '.' . pathinfo($_FILES["img_url"]["name"], PATHINFO_EXTENSION);
+
+          $config = array(
+            "allowed_types" => "jpg|jpeg|png",
+            "upload_path" => "uploads/$this->viewFolder/",
+            "file_name" => $file_name
+          );
+
+          $this->load->library("upload", $config);
+          $upload = $this->upload->do_upload("img_url");
+
+          if ($upload) {
+            $uploaded_file = $this->upload->data("file_name");
+
+            $data = array(
+              "title" => $this->input->post("title"),
+              "description" => $this->input->post("description"),
+              "url" => convertToSEO($this->input->post("title")),
+              "news_type" => $news_type,
+              "img_url" => $uploaded_file,
+              "video_url" => "#"
+            );
+          } else {
+            $alert = array(
+              "title" => "İşlem başarısızdır",
+              "text" => "Görsel yüklenirken bir problem oluştu",
+              "type" => "error"
+            );
+            $this->session->set_flashdata("alert", $alert);
+            redirect(base_url("news/update_form/$id"));
+            die();
+          }
+        } else {
+          $data = array(
+            "title" => $this->input->post("title"),
+            "description" => $this->input->post("description"),
+            "url" => convertToSEO($this->input->post("title"))
+          );
+        }
+      } else if ($news_type == "video") {
+        $data = array(
+          "title" => $this->input->post("title"),
+          "description" => $this->input->post("description"),
+          "url" => convertToSEO($this->input->post("title")),
+          "news_type" => $news_type,
+          "img_url" => "#",
+          "video_url" => $this->input->post("video_url")
+        );
+      }
+
+      $update = $this->news_model->update(array(
+        "id" => $id
+      ), $data);
+
+      if ($update) {
+        $alert = array(
+          "title" => "İşlem başarılı",
+          "text" => "Kayıt başarılı bir şekilde güncellendi",
+          "type" => "success"
+        );
+      } else {
+        $alert = array(
+          "title" => "İşlem başarısızdır",
+          "text" => "Kayıt güncellenirken bir hata oluştu",
+          "type" => "error"
+        );
+      }
+
+      /** İşlemin sonucunu sessiona yazıyoruz */
+      $this->session->set_flashdata("alert", $alert);
+      redirect(base_url("news"));
+    } else {
+      // Hata dönüşleri
+      $viewData = new stdClass();
+      $viewData->viewFolder = $this->viewFolder;
+      $viewData->subViewFolder = "update";
+      $viewData->form_error = true;
+      $viewData->news_type = $news_type;
+
+      $item = $this->news_model->get(
+        array(
+          "id" => $id
+        )
+      );
+      $viewData->item = $item;
+      $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
+    }
+
+  }
+
   public function delete($id)
   {
     $delete = $this->news_model->delete(
@@ -247,7 +361,7 @@ class News extends CI_Controller
 
     /** İşlemin sonucunu sessiona yazıyoruz */
     $this->session->set_flashdata("alert", $alert);
-    redirect(base_url("product"));
+    redirect(base_url("news"));
   }
 
   public function isActiveSetter($id)
@@ -282,160 +396,4 @@ class News extends CI_Controller
     }
   }
 
-  public function image_form($id)
-  {
-    $viewData = new stdClass();
-    $viewData->viewFolder = $this->viewFolder;
-    $viewData->subViewFolder = "image";
-    $viewData->item = $this->news_model->get(
-      array(
-        "id" => $id
-      )
-    );
-    $viewData->item_images = $this->product_image_model->get_all(
-      array(
-        "product_id" => $id
-      ),
-      "rank ASC"
-    );
-
-    $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/index", $viewData);
-  }
-
-  public function image_upload($id)
-  {
-    $file_name = convertToSEO(pathinfo($_FILES["file"]["name"], PATHINFO_FILENAME)) . '.' . pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
-
-    $config = array(
-      "allowed_types" => "jpg|jpeg|png",
-      "upload_path" => "uploads/$this->viewFolder/",
-      "file_name" => $file_name
-    );
-
-    $this->load->library("upload", $config);
-    $upload = $this->upload->do_upload("file");
-
-    if ($upload) {
-      $uploaded_file = $this->upload->data("file_name");
-
-      $this->product_image_model->add(
-        array(
-          "img_url" => $uploaded_file,
-          "rank" => 0,
-          "isActive" => 1,
-          "createdAt" => date('Y-m-d h:i:s'),
-          "product_id" => $id,
-          "isCover" => 0
-        )
-      );
-    } else {
-      echo "İşlem başarısız";
-    }
-  }
-
-  public function refresh_image_list($id)
-  {
-    $viewData = new stdClass();
-    $viewData->viewFolder = $this->viewFolder;
-    $viewData->subViewFolder = "image";
-    $viewData->item_images = $this->product_image_model->get_all(
-      array(
-        "product_id" => $id
-      )
-    );
-
-    $render_html = $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/render_elements/image_list_v", $viewData, true);
-    echo $render_html;
-  }
-
-  public function isCoverSetter($id, $parent_id)
-  {
-    if ($id && $parent_id) {
-      $isCover = ($this->input->post("data")) === "true" ? 1 : 0;
-
-      /** Kapak yapılmak istenen resim id si */
-      $this->product_image_model->update(array(
-        "id" => $id,
-        "product_id" => $parent_id
-      ), array(
-        "isCover" => $isCover
-      ));
-
-      /** Kapak yapılmayan diğer resim id leri */
-      $this->product_image_model->update(array(
-        "id !=" => $id,
-        "product_id" => $parent_id
-      ), array(
-        "isCover" => ($isCover) ? 0 : 0
-      ));
-
-      $viewData = new stdClass();
-      $viewData->viewFolder = $this->viewFolder;
-      $viewData->subViewFolder = "image";
-      $viewData->item_images = $this->product_image_model->get_all(
-        array(
-          "product_id" => $parent_id
-        ), "rank ASC"
-      );
-
-      $render_html = $this->load->view("{$viewData->viewFolder}/{$viewData->subViewFolder}/render_elements/image_list_v", $viewData, true);
-      echo $render_html;
-    }
-  }
-
-  public function imageActiveSetter($id)
-  {
-    if ($id) {
-      $isActive = ($this->input->post("data")) === "true" ? 1 : 0;
-
-      $this->product_image_model->update(array(
-        "id" => $id
-      ), array(
-        "isActive" => $isActive
-      ));
-    }
-  }
-
-  public function imageRankSetter()
-  {
-    $data = $this->input->post("data");
-    parse_str($data, $order);
-    $items = $order["ord"];
-
-    foreach ($items as $rank => $id) {
-      $this->product_image_model->update(
-        array(
-          "id" => $id,
-          "rank !=" => $rank
-        ),
-        array(
-          "rank" => $rank
-        )
-      );
-    }
-  }
-
-  public function imageDelete($id, $parent_id)
-  {
-    $fileName = $this->product_image_model->get(
-      array(
-        "id" => $id
-      )
-    );
-
-    $delete = $this->product_image_model->delete(
-      array(
-        "id" => $id
-      )
-    );
-
-    // TODO alert sistemi gerçekleştirilecek
-    if ($delete) {
-      unlink("uploads/{$this->viewFolder}/$fileName->img_url");
-
-      redirect(base_url("product/image_form/$parent_id"));
-    } else {
-      redirect(base_url("product/image_form/$parent_id"));
-    }
-  }
 }

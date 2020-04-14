@@ -53,7 +53,7 @@
               style="display: <?= ($news_type == "video") ? "block" : "none" ?>;"
             >
               <label>Video URL</label>
-              <input class="form-control" placeholder="Video bağlantısını buraya yapıştırınız" name="video_url">
+              <input class="form-control" placeholder="Video bağlantı keyini buraya yapıştırınız (Sadece Youtube Keyleri)" name="video_url">
               <?php if (isset($form_error)): ?>
                 <small class="pull-right input-form-error"><?= form_error("video_url") ?></small>
               <?php endif; ?>
@@ -66,7 +66,7 @@
 
             <div class="form-group video_url_container">
               <label>Video URL</label>
-              <input class="form-control" placeholder="Video bağlantısını buraya yapıştırınız" name="video_url">
+              <input class="form-control" placeholder="Video bağlantı keyini buraya yapıştırınız (Sadece Youtube Keyleri)" name="video_url">
             </div>
           <?php endif; ?>
 

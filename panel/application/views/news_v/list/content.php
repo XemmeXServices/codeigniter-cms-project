@@ -24,8 +24,6 @@
           <th><i class="fa fa-reorder"></i></th>
           <th>#id</th>
           <th>Başlık</th>
-          <th>url</th>
-          <th>Açıklama</th>
           <th>Haber Türü</th>
           <th>Görsel</th>
           <th>Durumu</th>
@@ -39,10 +37,25 @@
               <td class="order"><i class="fa fa-reorder"></i></td>
               <td class="order">#<?php echo $item->id; ?></td>
               <td><?php echo $item->title; ?></td>
-              <td><?php echo $item->url; ?></td>
-              <td><?php echo $item->description; ?></td>
               <td><?php echo $item->news_type ?></td>
-              <td>Görsel Gelecek</td>
+              <td>
+                <?php if ($item->news_type == "image"): ?>
+                  <img
+                    width="50"
+                    src="<?= base_url("uploads/$viewFolder/$item->img_url") ?>"
+                    alt=""
+                    class="img-rounded"
+                  >
+                <?php elseif ($item->news_type == "video"): ?>
+                  <iframe
+                    width="50"
+                    height="50"
+                    src="https://www.youtube.com/embed/<?= $item->video_url ?>"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                <?php endif; ?>
+              </td>
               <td>
                 <input
                   data-url="<?= base_url("news/isActiveSetter/$item->id"); ?>"
