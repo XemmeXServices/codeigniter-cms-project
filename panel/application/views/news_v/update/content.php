@@ -77,20 +77,22 @@
               <?php endif; ?>
             </div>
           <?php else: ?>
-            <div class="row">
-              <div class="col-md-2 image_upload_container">
-                <img
-                  style="width: 100px; height: 100px;"
-                  src="<?= base_url("uploads/$viewFolder/$item->img_url") ?>"
-                  alt=""
-                  class="img-responsive">
-              </div>
-              <div
-                class="col-md-10 form-group image_upload_container"
-                style="display: <?= ($item->news_type == "image") ? "block" : "none" ?>"
-              >
-                <label>Görsel Seçiniz</label>
-                <input type="file" class="form-control" name="img_url">
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-2 image_upload_container">
+                  <img
+                    style="width: 100px; height: 100px;"
+                    src="<?= base_url("uploads/$viewFolder/$item->img_url") ?>"
+                    alt=""
+                    class="img-responsive">
+                </div>
+                <div
+                  class="col-md-10 form-group image_upload_container"
+                  style="display: <?= ($item->news_type == "image") ? "block" : "none" ?>"
+                >
+                  <label>Görsel Seçiniz</label>
+                  <input type="file" class="form-control" name="img_url">
+                </div>
               </div>
             </div>
 

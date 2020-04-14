@@ -112,7 +112,7 @@
         </li>
 
         <li>
-          <a href="<?= base_url("references") ?>">
+          <a href="<?= base_url("reference") ?>">
             <i class="menu-icon zmdi zmdi-check zmdi-hc-lg"></i>
             <span class="menu-text">Referanslar</span>
           </a>
